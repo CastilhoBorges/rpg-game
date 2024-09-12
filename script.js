@@ -16,9 +16,16 @@ const inventory = new Array("stick");
 
 let xp = 0;
 let health = 100;
-let gold = 50;
+let gold = 250;
 let currentWeaponIndex = 0;
 let fighting;
+
+const weapons = [
+  { name: "stick", power: 5 },
+  { name: "dagger", power: 30 },
+  { name: "claw hammer", power: 50 },
+  { name: "sword", power: 100 },
+];
 
 const locations = [
   {
@@ -45,7 +52,7 @@ const locations = [
   },
 ];
 
-const update = function (location) {
+function update(location) {
   text.innerText = location.text;
 
   button1.innerText = location["button text"][0];
@@ -55,26 +62,59 @@ const update = function (location) {
   button1.onclick = location["button functions"][0];
   button2.onclick = location["button functions"][1];
   button3.onclick = location["button functions"][2];
-};
+}
 
-const goTown = () => update(locations[0]);
+function goTown() {
+  update(locations[0]);
+}
 
-const buyHealth = () => {
-  gold -= 10;
-  health += 10;
-};
+function buyHealth() {
+  if (gold >= 10) {
+    gold -= 10;
+    health += 10;
 
-const buyWeapon = function () {};
+    goldText.innerText = gold;
+    healthText.innerText = health;
+  } else {
+    text.innerText = `You do not have enough gold to buy health.`;
+  }
+}
 
-const goStore = () => update(locations[1]);
+function buyWeapon() {
+  if (currentWeaponIndex < weapons.length - 1) {
+    if (gold >= 30) {
+      gold -= 30;
+      currentWeaponIndex++;
 
-const goCave = () => update(locations[2]);
+      let newWeapon = weapons[currentWeaponIndex].name;
 
-const fightDragon = function () {};
+      goldText.innerText = gold;
+      text.innerText = `You now have a new weapon.`;
 
-const fightSlime = function () {};
+      inventory.push(newWeapon);
 
-const fightBeast = function () {};
+      text.innerText += " In your inventory you have: " + inventory;
+    } else {
+      text.innerText = "You do not have enough gold to buy a weapon.";
+    }
+  } else {
+    text.innerText = `You already have the most powerful weapon!`;
+  }
+}
+
+function goStore() {
+  update(locations[1]);
+}
+
+function goCave() {
+  update(locations[2]);
+}
+
+function fightDragon() {}
+
+function fightSlime() {}
+
+function fightBeast() {}
 
 // initialize buttons
 button1.onclick = goStore;
